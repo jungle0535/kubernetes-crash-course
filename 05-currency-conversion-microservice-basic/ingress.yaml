@@ -1,18 +1,30 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: gateway-ingress
+  namespace: default
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  type: ExternalName
+  externalName: whoami.tmc-dev.svc.cluster.local #or any external svc
+  ports:
+    - port: 80 #specify the port of service you want to expose
+      targetPort: 80 #port of external service
   rules:
   - http:
       paths:
       - path: /currency-exchange/*
+        pathType: Prefix
         backend:
-          serviceName: currency-exchange
-          servicePort: 8000          
+          service:
+            name: currency-exchange
+            port:
+              number: 8000
       - path: /currency-conversion/*
+        pathType: Prefix
         backend:
-          serviceName: currency-conversion
-          servicePort: 8100
+          service:
+            name: currency-conversion
+            port:
+              number: 8100

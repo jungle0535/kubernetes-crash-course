@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -25,6 +25,13 @@ spec:
       - image: in28min/currency-conversion:0.0.2-RELEASE #CHANGE
         imagePullPolicy: IfNotPresent
         name: currency-conversion
+        resources: #CHANGE
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1024Mi #256Mi
         env:
           - name: CURRENCY_EXCHANGE_URI
             value: http://currency-exchange
